@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { CountryView } from './accuweather';
+import { CountryListView } from './accuweather';
 
 render(
-    <CountryView />,
+    <CountryListView />,
     document.getElementById('root'),
 );
 
