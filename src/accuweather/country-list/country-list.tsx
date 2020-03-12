@@ -1,51 +1,48 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
     Table, TableCell, TableBody,
     TableRow, TableHead, TableContainer,
     Paper, TablePagination, TableFooter,
 } from '@material-ui/core';
-import { API_KEY, BASE_URL, ENTITIES } from '../../constants';
 
-interface Country {
+import { fetchCountriesAction } from './actions';
+import { StoreState } from '../../interfaces';
+import {  fetchDataThunkAction, Action } from '../../services'
+
+interface Location {
     ID: string;
     LocalizedName: string;
     EnglishName: string;
 }
 
+export type Country = Location;
+export type Region = Location;
+
 interface CountryListState {
     list: Country[];
+    regions: Region[];
     page: number;
     rowsPerPage: number;
-
 }
 
-export class CountryListView extends React.Component<any, CountryListState> {
+interface CountryListProps {
+    fetchData: (action: Action) => any;
+}
+
+class CountryListView extends React.Component<CountryListProps, CountryListState> {
     constructor(props: any){
         super(props);
         this.state = {
             list: [],
+            regions: [],
             page: 0,
             rowsPerPage: 10,
         }
     }
 
     componentDidMount() {
-        fetch(`${BASE_URL}/${ENTITIES.locations}/v1/countries?apikey=${API_KEY}`)
-            .then((res: Response) => res.json())
-            .then((data: Country[]) => {
-                data = JSON.parse(JSON.stringify(data))
-                    .sort((c1: Country, c2: Country) => {
-                        if(c1.LocalizedName > c2.LocalizedName) {
-                            return 1;
-                        } else {
-                            return -1;
-                        }
-                    });
-                this.setState({ list: data });
-            })
-            .catch((err: Error) => {
-                console.log(err);
-            });
+        this.props.fetchData(fetchCountriesAction());
     }
 
     render(){
@@ -62,7 +59,7 @@ export class CountryListView extends React.Component<any, CountryListState> {
                     <TableHead>
                         {
                             <TableRow>
-                                {columns.map((column:string) => (<TableCell>{column}</TableCell>))}
+                                { columns.map((column:string) => (<TableCell>{column}</TableCell>)) }
                             </TableRow>
                         }
                     </TableHead>
@@ -71,12 +68,12 @@ export class CountryListView extends React.Component<any, CountryListState> {
                             this.state.list
                                 .slice(page*rowsPerPage, page*rowsPerPage + rowsPerPage)
                                 .map(({ ID, LocalizedName, EnglishName }: Country) => (
-                                <TableRow>
-                                    <TableCell>{ID}</TableCell>
-                                    <TableCell>{LocalizedName}</TableCell>
-                                    <TableCell>{EnglishName}</TableCell>
-                                </TableRow>
-                            ))
+                                    <TableRow>
+                                        <TableCell>{ID}</TableCell>
+                                        <TableCell>{LocalizedName}</TableCell>
+                                        <TableCell>{EnglishName}</TableCell>
+                                    </TableRow>
+                                ))
                         }
                     </TableBody>
                 </Table>
@@ -97,3 +94,13 @@ export class CountryListView extends React.Component<any, CountryListState> {
         );
     }
 }
+
+let mapDispatchToProps = () => ({
+    fetchData: fetchDataThunkAction,
+});
+
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(CountryListView);
