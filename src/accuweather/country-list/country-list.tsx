@@ -6,9 +6,9 @@ import {
     Paper, TablePagination, TableFooter,
 } from '@material-ui/core';
 
-import { fetchCountriesAction } from './actions';
 import { StoreState } from '../../interfaces';
-import {  fetchDataThunkAction, Action } from '../../services'
+import { fetchCountriesAction } from './actions';
+import {  fetchDataThunkAction } from '../../services'
 
 interface Location {
     ID: string;
@@ -27,7 +27,8 @@ interface CountryListState {
 }
 
 interface CountryListProps {
-    fetchData: (action: Action) => any;
+    countries?: Country[];
+    dispatch?: any;
 }
 
 class CountryListView extends React.Component<CountryListProps, CountryListState> {
@@ -41,8 +42,8 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
         }
     }
 
-    componentDidMount() {
-        this.props.fetchData(fetchCountriesAction());
+    componentWillMount() {
+        this.props.dispatch(fetchDataThunkAction(fetchCountriesAction()));
     }
 
     render(){
@@ -95,12 +96,7 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
     }
 }
 
-let mapDispatchToProps = () => ({
-    fetchData: fetchDataThunkAction,
-});
-
-
 export default connect(
-    null,
-    mapDispatchToProps
-)(CountryListView);
+    ({ locations: { countries } }: StoreState) => ({
+        countries
+}), null)(CountryListView);
