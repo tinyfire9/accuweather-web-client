@@ -1,10 +1,11 @@
 import { Action, fetchDataSuccessAction, fetchDataErrorAction } from './';
-import { makeURL } from '../constants'
+import { makeURL, StoreState } from '../'
+import { ThunkDispatch } from 'redux-thunk';
 
 export let fetchDataThunkAction = (action: Action): any => {
-    return (dispatch: any) => {
-        let uri = makeURL(action.service, action.route);
-        fetch(uri)
+    return (dispatch: ThunkDispatch<StoreState, any, Action>) => {
+        let url = makeURL(action.service, action.route);
+        fetch(url)
             .then((response: Response) => {
                 if(response.status === 200) {
                     return response.json();
