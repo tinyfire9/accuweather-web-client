@@ -6,9 +6,10 @@ import {
     Paper, TablePagination, TableFooter,
 } from '@material-ui/core';
 
+import { ThunkDispatch } from 'redux-thunk';
 import { StoreState } from '../../interfaces';
 import { fetchCountriesAction } from './actions';
-import {  fetchDataThunkAction } from '../../services'
+import {  fetchDataThunkAction, Action } from '../../services';
 
 interface Location {
     ID: string;
@@ -20,7 +21,6 @@ export type Country = Location;
 export type Region = Location;
 
 interface CountryListState {
-    list: Country[];
     regions: Region[];
     page: number;
     rowsPerPage: number;
@@ -28,31 +28,31 @@ interface CountryListState {
 
 interface CountryListProps {
     countries?: Country[];
-    dispatch?: any;
+    fetchCountries: () => any;
 }
 
 class CountryListView extends React.Component<CountryListProps, CountryListState> {
     constructor(props: any){
         super(props);
         this.state = {
-            list: [],
             regions: [],
             page: 0,
             rowsPerPage: 10,
         }
     }
 
-    componentWillMount() {
-        this.props.dispatch(fetchDataThunkAction(fetchCountriesAction()));
+    public componentDidMount() {
+        this.props.fetchCountries();
     }
 
-    render(){
+    public render(){
         let columns: string[] = [
             'ID',
             'Localized Name',
             'English Name',
         ];
         let { page, rowsPerPage } = this.state;
+        let countries = this.props.countries || [];
 
         return (
             <TableContainer component={Paper}>
@@ -60,16 +60,16 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
                     <TableHead>
                         {
                             <TableRow>
-                                { columns.map((column:string) => (<TableCell>{column}</TableCell>)) }
+                                { columns.map((column:string) => (<TableCell key={column}>{column}</TableCell>)) }
                             </TableRow>
                         }
                     </TableHead>
                     <TableBody>
                         {
-                            this.state.list
+                            countries
                                 .slice(page*rowsPerPage, page*rowsPerPage + rowsPerPage)
                                 .map(({ ID, LocalizedName, EnglishName }: Country) => (
-                                    <TableRow>
+                                    <TableRow key={ID}>
                                         <TableCell>{ID}</TableCell>
                                         <TableCell>{LocalizedName}</TableCell>
                                         <TableCell>{EnglishName}</TableCell>
@@ -80,10 +80,10 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
                 </Table>
                 <TableFooter>
                     <TablePagination
-                        page={this.state.page}
+                        page={page}
                         rowsPerPageOptions={[10, 25, 50, 100, {label: 'All', value: -1}]}
-                        count={this.state.list.length}
-                        rowsPerPage={this.state.rowsPerPage}
+                        count={countries.length}
+                        rowsPerPage={rowsPerPage}
                         component="div"
                         onChangePage={(event, newPage) => this.setState({ page: newPage })}
                         onChangeRowsPerPage={(event) => this.setState({
@@ -96,7 +96,9 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
     }
 }
 
-export default connect(
-    ({ locations: { countries } }: StoreState) => ({
-        countries
-}), null)(CountryListView);
+let mapStateToProps = ({ countries }: StoreState) => ({ countries });
+let mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, any, Action>) => ({
+    fetchCountries: () => dispatch(fetchDataThunkAction(fetchCountriesAction())),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CountryListView);
