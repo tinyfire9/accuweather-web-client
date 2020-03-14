@@ -9,7 +9,5 @@ export interface HTTPErrorResponse {
 }
 
 export interface StoreState {
-    locations: {
-        countries: Country[],
-    },
+    countries: Country[];
 };
