@@ -9,13 +9,9 @@ import {
 import { ThunkDispatch } from 'redux-thunk';
 import { StoreState } from '../../interfaces';
 import { fetchCountriesAction } from './actions';
+import { fetchRegionsAction } from '../regions';
 import {  fetchDataThunkAction, Action } from '../../services';
-
-interface Location {
-    ID: string;
-    LocalizedName: string;
-    EnglishName: string;
-}
+import { Location } from '../';
 
 export type Country = Location;
 export type Region = Location;
@@ -28,7 +24,9 @@ interface CountryListState {
 
 interface CountryListProps {
     countries?: Country[];
+    regions?: Region[];
     fetchCountries: () => any;
+    fetchRegions: () => any;
 }
 
 class CountryListView extends React.Component<CountryListProps, CountryListState> {
@@ -43,6 +41,7 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
 
     public componentDidMount() {
         this.props.fetchCountries();
+        this.props.fetchRegions();
     }
 
     public render(){
@@ -96,9 +95,10 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
     }
 }
 
-let mapStateToProps = ({ countries }: StoreState) => ({ countries });
+let mapStateToProps = ({ countries, regions }: StoreState) => ({ countries, regions });
 let mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, any, Action>) => ({
     fetchCountries: () => dispatch(fetchDataThunkAction(fetchCountriesAction())),
+    fetchRegions: () => dispatch(fetchDataThunkAction(fetchRegionsAction())),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CountryListView);
