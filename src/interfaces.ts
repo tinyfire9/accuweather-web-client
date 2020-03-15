@@ -1,4 +1,4 @@
-import { Country } from './accuweather/country-list';
+import { Country, Region } from './accuweather/country-list';
 
 export interface HTTPErrorResponse {
     '400': string,
@@ -10,4 +10,5 @@ export interface HTTPErrorResponse {
 
 export interface StoreState {
     countries: Country[];
+    regions: Region[];
 };
