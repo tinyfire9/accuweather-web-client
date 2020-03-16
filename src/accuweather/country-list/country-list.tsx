@@ -12,6 +12,7 @@ import { fetchCountriesAction } from './actions';
 import { fetchRegionsAction } from '../regions';
 import {  fetchDataThunkAction, Action } from '../../services';
 import { Location } from '../';
+import RegionsMenu from './regions-menu';
 
 export type Country = Location;
 export type Region = Location;
@@ -25,12 +26,12 @@ interface CountryListState {
 interface CountryListProps {
     countries?: Country[];
     regions?: Region[];
-    fetchCountries: () => any;
+    fetchCountries: (regionID?: string) => any;
     fetchRegions: () => any;
 }
 
 class CountryListView extends React.Component<CountryListProps, CountryListState> {
-    constructor(props: any){
+    constructor(props: CountryListProps){
         super(props);
         this.state = {
             regions: [],
@@ -44,6 +45,14 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
         this.props.fetchRegions();
     }
 
+    private onRegionSelect(region: string) {
+        if(region.toLowerCase() === 'all') {
+            this.props.fetchCountries();
+        } else {
+            this.props.fetchCountries(region);
+        }
+    }
+
     public render(){
         let columns: string[] = [
             'ID',
@@ -55,6 +64,11 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
 
         return (
             <TableContainer component={Paper}>
+                <RegionsMenu
+                    region="all"
+                    regions={this.props.regions || []}
+                    onRegionSelect={(region:string) => this.onRegionSelect(region)}
+                />
                 <Table size="small" stickyHeader={true} >
                     <TableHead>
                         {
@@ -97,7 +111,7 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
 
 let mapStateToProps = ({ countries, regions }: StoreState) => ({ countries, regions });
 let mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, any, Action>) => ({
-    fetchCountries: () => dispatch(fetchDataThunkAction(fetchCountriesAction())),
+    fetchCountries: (regionID?: string) => dispatch(fetchDataThunkAction(fetchCountriesAction(regionID))),
     fetchRegions: () => dispatch(fetchDataThunkAction(fetchRegionsAction())),
 });
 
