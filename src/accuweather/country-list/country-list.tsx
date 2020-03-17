@@ -80,6 +80,7 @@ class CountryListView extends React.Component<CountryListProps, CountryListState
                     <TableBody>
                         {
                             countries
+                                .sort((c1: Country, c2: Country) => c1.EnglishName > c2.EnglishName ? 1 : -1)
                                 .slice(page*rowsPerPage, page*rowsPerPage + rowsPerPage)
                                 .map(({ ID, LocalizedName, EnglishName }: Country) => (
                                     <TableRow key={ID}>
