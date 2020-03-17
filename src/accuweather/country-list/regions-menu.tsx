@@ -43,7 +43,7 @@ class RegionsMenu extends React.Component<RegionsMenuProps, RegionsMenuState> {
             <MenuItem
                 onClick={() => {
                     this.props.onRegionSelect('all');
-                    this.onClose();
+                    this.onClose('All');
                 }}
             >
                 All
