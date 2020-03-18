@@ -1,4 +1,4 @@
-import { Country, Region } from './accuweather/country-list';
+import { Country, Region } from './accuweather/locations';
 
 export interface HTTPErrorResponse {
     '400': string,

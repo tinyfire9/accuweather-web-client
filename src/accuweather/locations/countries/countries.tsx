@@ -7,31 +7,31 @@ import {
 } from '@material-ui/core';
 
 import { ThunkDispatch } from 'redux-thunk';
-import { StoreState } from '../../interfaces';
+import { StoreState } from '../../../interfaces';
 import { fetchCountriesAction } from './actions';
 import { fetchRegionsAction } from '../regions';
-import {  fetchDataThunkAction, Action } from '../../services';
-import { Location } from '../';
+import {  fetchDataThunkAction, Action } from '../../../services';
+import { Location } from '..';
 import RegionsMenu from './regions-menu';
 
 export type Country = Location;
 export type Region = Location;
 
-interface CountryListState {
+interface CountriesState {
     regions: Region[];
     page: number;
     rowsPerPage: number;
 }
 
-interface CountryListProps {
+interface CountriesProps {
     countries?: Country[];
     regions?: Region[];
     fetchCountries: (regionID?: string) => any;
     fetchRegions: () => any;
 }
 
-class CountryListView extends React.Component<CountryListProps, CountryListState> {
-    constructor(props: CountryListProps){
+class CountriesView extends React.Component<CountriesProps, CountriesState> {
+    constructor(props: CountriesProps){
         super(props);
         this.state = {
             regions: [],
@@ -116,4 +116,4 @@ let mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, any, Action>) => (
     fetchRegions: () => dispatch(fetchDataThunkAction(fetchRegionsAction())),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CountryListView);
+export default connect(mapStateToProps, mapDispatchToProps)(CountriesView);

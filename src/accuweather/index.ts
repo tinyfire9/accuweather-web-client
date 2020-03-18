@@ -1,2 +1,1 @@
-export * from './country-list';
-export * from './interfaces';
+export * from './locations';
