@@ -2,7 +2,7 @@ import React from 'react';
 
 import { connect } from 'react-redux';
 import { Region } from '.';
-import { Menu, MenuItem, Button } from '@material-ui/core';
+import { Menu, MenuItem, Button, Container } from '@material-ui/core';
 
 interface RegionsMenuState {
     region: string;
@@ -63,8 +63,14 @@ class RegionsMenu extends React.Component<RegionsMenuProps, RegionsMenuState> {
         }), allRegionsMenuItem];
 
         return (
-            <div className="regions-menu">
-                <Button aria-haspopup="true" onClick={(event: any) => this.setAnchorEl(event)} >{this.state.region}</Button>
+            <Container className="regions-menu">
+                <Container className="regions-menu-title regions-menu-item">Region: </Container>
+                <Button 
+                    className="regions-menu-button regions-menu-item"
+                    aria-haspopup="true"
+                    onClick={(event: any) => this.setAnchorEl(event)} >
+                        {this.state.region}
+                </Button>
                 <Menu
                     keepMounted={true}
                     anchorEl={this.state.anchorEl}
@@ -73,7 +79,7 @@ class RegionsMenu extends React.Component<RegionsMenuProps, RegionsMenuState> {
                 >
                     {regionsMenuItems}
                 </Menu>
-            </div>
+            </Container>
         );
     }
 }
