@@ -2,11 +2,13 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { CountryListView } from './accuweather';
+import { Countries } from './accuweather';
+import { Layout, NavBar } from './components';
+
 
 render(
     <Provider store={store}>
-        <CountryListView />
+        <Layout navBar={<NavBar />} views={<Countries />} />
     </Provider>,
     document.getElementById('root'),
 );
