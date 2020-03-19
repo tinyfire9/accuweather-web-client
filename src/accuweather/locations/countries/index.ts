@@ -1,4 +1,4 @@
-import CountryListView from './countries';
+import Countries from './countries';
 
-export { CountryListView };
+export { Countries };
 export * from './countries';
