@@ -5,6 +5,7 @@ import {
     Table, TableCell, TableBody,
     TableRow, TableHead, TableContainer,
     Paper, TablePagination, TableFooter,
+    withStyles
 } from '@material-ui/core';
 
 import { StoreState } from '../../../interfaces';
@@ -13,7 +14,7 @@ import { fetchRegionsAction } from '../regions';
 import {  fetchDataThunkAction, Action } from '../../../services';
 import RegionsMenu from './regions-menu';
 import { Location } from '../../';
-import './style.css';
+import './style.scss';
 
 export type Country = Location;
 export type Region = Location;
@@ -29,7 +30,14 @@ interface CountriesProps {
     regions?: Region[];
     fetchCountries: (regionID?: string) => any;
     fetchRegions: () => any;
+    classes: any;
 }
+
+let style = {
+    table: {
+        height: `${window.innerHeight*.80}px`,
+    }
+};
 
 class CountriesView extends React.Component<CountriesProps, CountriesState> {
     constructor(props: CountriesProps){
@@ -37,7 +45,7 @@ class CountriesView extends React.Component<CountriesProps, CountriesState> {
         this.state = {
             regions: [],
             page: 0,
-            rowsPerPage: 10,
+            rowsPerPage: 15,
         }
     }
 
@@ -70,8 +78,8 @@ class CountriesView extends React.Component<CountriesProps, CountriesState> {
                     regions={this.props.regions || []}
                     onRegionSelect={(region:string) => this.onRegionSelect(region)}
                 />
-                <TableContainer component={Paper}>
-                    <Table size="small" stickyHeader={true} >
+                <TableContainer component={Paper} className={this.props.classes.table}>
+                    <Table size="small" stickyHeader={true}  >
                         <TableHead>
                             {
                                 <TableRow>
@@ -96,15 +104,13 @@ class CountriesView extends React.Component<CountriesProps, CountriesState> {
                     </Table>
                     <TableFooter>
                         <TablePagination
+                            rowsPerPageOptions={[]}
+                            labelRowsPerPage={false}
                             page={page}
-                            rowsPerPageOptions={[10, 25, 50, 100, {label: 'All', value: -1}]}
                             count={countries.length}
                             rowsPerPage={rowsPerPage}
                             component="div"
                             onChangePage={(event, newPage) => this.setState({ page: newPage })}
-                            onChangeRowsPerPage={(event) => this.setState({
-                                rowsPerPage: +event.target.value,
-                            })}
                         />
                     </TableFooter>
                 </TableContainer>
@@ -119,4 +125,6 @@ let mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, any, Action>) => (
     fetchRegions: () => dispatch(fetchDataThunkAction(fetchRegionsAction())),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CountriesView);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withStyles(style)(CountriesView)
+);
