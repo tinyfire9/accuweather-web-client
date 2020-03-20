@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tab } from '@material-ui/core';
+import { Paper, Tabs, Tab, withStyles } from '@material-ui/core';
 import { uiConfig, ServiceUIConfig } from '../../config';
 
 class NavBar extends React.Component <any, any> {
@@ -13,19 +13,29 @@ class NavBar extends React.Component <any, any> {
 
     public render(){
         return (
-            <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                value={this.state.value}
-            >
-                {
-                    uiConfig.map((config: ServiceUIConfig) => {
-                        return <Tab label={config.name}/>
-                    })
-                }
-            </Tabs>
+            <Paper className={this.props.classes.navbar}>
+                <Tabs
+                    className="aw-nav-bar-item aw-nav-bar-tabs"
+                    orientation="vertical"
+                    variant="scrollable"
+                    value={this.state.value}
+                >
+                    {
+                        uiConfig.map((config: ServiceUIConfig) => {
+                            return <Tab className="aw-nav-bar-item aw-nav-bar-tab" label={config.name}/>
+                        })
+                    }
+                </Tabs>
+            </Paper>
         );
     }
 }
 
-export default NavBar;
+
+let style = {
+    navbar: {
+        height: `${window.innerHeight*.85}px`
+    }
+};
+
+export default withStyles(style)(NavBar);
