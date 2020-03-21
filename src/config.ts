@@ -3,12 +3,12 @@ import { SERVICE, FEATURE } from './constants';
 import { Countries } from './accuweather/locations';
 import { ConnectedComponent } from 'react-redux';
 
-interface UIConfig {
+export interface UIConfig {
     route: string;
-    component?: ConnectedComponent<any, any> | React.Component | ReactElement | Element | null;
+    component?: ConnectedComponent<any, any> | React.Component | ReactElement | Element | null | any;
 }
 
-interface FeatureUIConfig extends UIConfig {
+export interface FeatureUIConfig extends UIConfig {
     name: FEATURE;
 }
 
