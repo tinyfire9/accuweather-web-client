@@ -78,7 +78,7 @@ class CountriesView extends React.Component<CountriesProps, CountriesState> {
                     regions={this.props.regions || []}
                     onRegionSelect={(region:string) => this.onRegionSelect(region)}
                 />
-                <TableContainer component={Paper} className={this.props.classes.table}>
+                <TableContainer component={Paper} className={this.props.classes.table + ' countries-table-container'}>
                     <Table size="small" stickyHeader={true}  >
                         <TableHead>
                             {
@@ -102,7 +102,7 @@ class CountriesView extends React.Component<CountriesProps, CountriesState> {
                             }
                         </TableBody>
                     </Table>
-                    <TableFooter>
+                    <TableFooter className="countries-table-footer">
                         <TablePagination
                             rowsPerPageOptions={[]}
                             labelRowsPerPage={false}
