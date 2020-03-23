@@ -1,5 +1,6 @@
-import { StoreState } from '../';
-import { ACTION_TYPE, Action } from "../services";
+import { StoreState } from '../interfaces';
+import { ACTION_TYPE } from "../services/action-types";
+import { Action } from './interfaces';
 
 let initialState: StoreState = {
     countries: [],

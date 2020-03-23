@@ -1,5 +1,6 @@
 import { FEATURE, SERVICE } from '../constants';
-import { ACTION_TYPE, Action } from './';
+import { ACTION_TYPE } from './action-types';
+import { Action } from './interfaces';
 
 export let fetchDataAction = (feature: FEATURE, service: SERVICE, route?: string): Action => ({
     type: ACTION_TYPE.FETCH_DATA,
