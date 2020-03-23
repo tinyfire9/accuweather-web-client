@@ -1,6 +1,11 @@
 import React from 'react';
-import { Paper, Tabs, Tab, withStyles } from '@material-ui/core';
-import { uiConfig, ServiceUIConfig } from '../../config';
+import {
+    Paper, Tabs, Tab, withStyles,
+    ExpansionPanel, ExpansionPanelDetails,
+    ExpansionPanelSummary,
+} from '@material-ui/core';
+import { uiConfig, ServiceUIConfig, FeatureUIConfig } from '../../config';
+import { Link } from 'react-router-dom';
 
 class NavBar extends React.Component <any, any> {
     constructor(props: any) {
@@ -10,8 +15,34 @@ class NavBar extends React.Component <any, any> {
         };
     }
 
+    private makeNavExansionPanel(service: ServiceUIConfig){
+        if(!service.features){
+            return (
+                <ExpansionPanel>
+                    <ExpansionPanelSummary>
+                        <Tab label={service.name}/>
+                    </ExpansionPanelSummary>
+                </ExpansionPanel>
+            )
+        }
+
+        let tabs = service.features.map(
+            (feature: FeatureUIConfig) => <Link className={this.props.classes.navBarLink} to={service.route + feature.route}><Tab label={feature.name}/></Link>
+        );
+
+        return (
+            <ExpansionPanel>
+                <ExpansionPanelSummary><Tab label={service.name}/></ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    {tabs}
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        )
+    }
 
     public render(){
+        let navExpansionPanels = uiConfig.map((service: ServiceUIConfig) => this.makeNavExansionPanel(service));
+
         return (
             <Paper className={this.props.classes.navbar}>
                 <Tabs
@@ -20,11 +51,7 @@ class NavBar extends React.Component <any, any> {
                     variant="scrollable"
                     value={this.state.value}
                 >
-                    {
-                        uiConfig.map((config: ServiceUIConfig) => {
-                            return <Tab className="aw-nav-bar-item aw-nav-bar-tab" label={config.name}/>
-                        })
-                    }
+                    {navExpansionPanels}
                 </Tabs>
             </Paper>
         );
@@ -35,6 +62,11 @@ class NavBar extends React.Component <any, any> {
 let style = {
     navbar: {
         height: `${window.innerHeight*.85}px`
+    },
+    navBarLink: {
+        color: 'inherit',
+        'text-decoration': 'none',
+        'text-indent': '20px'
     }
 };
 
