@@ -55,6 +55,7 @@ class CountriesView extends React.Component<CountriesProps, CountriesState> {
     }
 
     private onRegionSelect(region: string) {
+        this.setState({ page: 0 });
         if(region.toLowerCase() === 'all') {
             this.props.fetchCountries();
         } else {
