@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { AccuWeather } from './accuweather';
-import { Layout, NavBar } from './components';
+import { Layout, NavBar } from './library';
 
 
 render(
