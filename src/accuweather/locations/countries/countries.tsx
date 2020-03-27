@@ -39,7 +39,7 @@ let style = {
     }
 };
 
-class CountriesView extends React.Component<CountriesProps, CountriesState> {
+class CountriesView extends React.PureComponent<CountriesProps, CountriesState> {
     constructor(props: CountriesProps){
         super(props);
         this.state = {
