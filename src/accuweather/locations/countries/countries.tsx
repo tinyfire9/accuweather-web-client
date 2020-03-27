@@ -1,12 +1,6 @@
 import React, { Fragment } from 'react';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
-import {
-    Table, TableCell, TableBody,
-    TableRow, TableHead, TableContainer,
-    Paper, TablePagination, TableFooter,
-    withStyles
-} from '@material-ui/core';
 
 import { StoreState } from '../../../interfaces';
 import { fetchCountriesAction } from './actions';
@@ -14,40 +8,20 @@ import { fetchRegionsAction } from '../regions';
 import {  fetchDataThunkAction, Action } from '../../../services';
 import RegionsMenu from './regions-menu';
 import { Location } from '../../';
+import { AWTable } from '../../../library'
 import './style.scss';
 
 export type Country = Location;
 export type Region = Location;
-
-interface CountriesState {
-    regions: Region[];
-    page: number;
-    rowsPerPage: number;
-}
 
 interface CountriesProps {
     countries?: Country[];
     regions?: Region[];
     fetchCountries: (regionID?: string) => any;
     fetchRegions: () => any;
-    classes: any;
 }
 
-let style = {
-    table: {
-        height: `${window.innerHeight*.80}px`,
-    }
-};
-
-class CountriesView extends React.PureComponent<CountriesProps, CountriesState> {
-    constructor(props: CountriesProps){
-        super(props);
-        this.state = {
-            regions: [],
-            page: 0,
-            rowsPerPage: 15,
-        }
-    }
+class CountriesView extends React.Component<CountriesProps, any> {
 
     public componentDidMount() {
         this.props.fetchCountries();
@@ -69,7 +43,6 @@ class CountriesView extends React.PureComponent<CountriesProps, CountriesState> 
             'Localized Name',
             'English Name',
         ];
-        let { page, rowsPerPage } = this.state;
         let countries = this.props.countries || [];
 
         return (
@@ -79,42 +52,14 @@ class CountriesView extends React.PureComponent<CountriesProps, CountriesState> 
                     regions={this.props.regions || []}
                     onRegionSelect={(region:string) => this.onRegionSelect(region)}
                 />
-                <TableContainer component={Paper} className={this.props.classes.table + ' countries-table-container'}>
-                    <Table size="small" stickyHeader={true}  >
-                        <TableHead>
-                            {
-                                <TableRow>
-                                    { columns.map((column:string) => (<TableCell key={column}>{column}</TableCell>)) }
-                                </TableRow>
-                            }
-                        </TableHead>
-                        <TableBody>
-                            {
-                                countries
-                                    .sort((c1: Country, c2: Country) => c1.EnglishName > c2.EnglishName ? 1 : -1)
-                                    .slice(page*rowsPerPage, page*rowsPerPage + rowsPerPage)
-                                    .map(({ ID, LocalizedName, EnglishName }: Country) => (
-                                        <TableRow key={ID}>
-                                            <TableCell>{ID}</TableCell>
-                                            <TableCell>{LocalizedName}</TableCell>
-                                            <TableCell>{EnglishName}</TableCell>
-                                        </TableRow>
-                                    ))
-                            }
-                        </TableBody>
-                    </Table>
-                    <TableFooter className="countries-table-footer">
-                        <TablePagination
-                            rowsPerPageOptions={[]}
-                            labelRowsPerPage={false}
-                            page={page}
-                            count={countries.length}
-                            rowsPerPage={rowsPerPage}
-                            component="div"
-                            onChangePage={(event, newPage) => this.setState({ page: newPage })}
-                        />
-                    </TableFooter>
-                </TableContainer>
+                <AWTable
+                    header={columns}
+                    data={
+                        countries
+                            .sort((c1: Country, c2: Country) => c1.EnglishName > c2.EnglishName ? 1 : -1)    
+                            .map(({ ID, EnglishName, LocalizedName }: Country) => [ID, LocalizedName, EnglishName])
+                    }
+                />
             </Fragment>
         );
     }
@@ -126,6 +71,4 @@ let mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, any, Action>) => (
     fetchRegions: () => dispatch(fetchDataThunkAction(fetchRegionsAction())),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    withStyles(style)(CountriesView)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CountriesView);
