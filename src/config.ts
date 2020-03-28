@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import { SERVICE, FEATURE } from './constants';
-import { Countries } from './accuweather/locations';
+import { Countries, Regions } from './accuweather/locations';
 import { ConnectedComponent } from 'react-redux';
 
 export interface UIConfig {
@@ -26,6 +26,11 @@ export let uiConfig: ServiceUIConfig[]  = [
                 name: FEATURE.country,
                 route: `/${FEATURE.country}`,
                 component: Countries,
+            },
+            {
+                name: FEATURE.region,
+                route: `/${FEATURE.region}`,
+                component: Regions,
             }
         ]
     },
