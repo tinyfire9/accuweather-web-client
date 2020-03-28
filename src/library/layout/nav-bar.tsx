@@ -27,15 +27,19 @@ class NavBar extends React.Component <any, any> {
         }
 
         let tabs = service.features.map(
-            (feature: FeatureUIConfig) => <Link className={this.props.classes.navBarLink} to={service.route + feature.route}><Tab label={feature.name}/></Link>
+            (feature: FeatureUIConfig) => (
+                <ExpansionPanelDetails>
+                    <Link className={this.props.classes.navBarLink} to={service.route + feature.route}>
+                        <Tab label={feature.name}/>
+                    </Link>
+                </ExpansionPanelDetails>
+            )
         );
 
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary><Tab label={service.name}/></ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    {tabs}
-                </ExpansionPanelDetails>
+                { tabs }
             </ExpansionPanel>
         )
     }
