@@ -33,6 +33,12 @@ class AWTable extends React.Component<AWTableProps, AWTableState> {
         }
     }
 
+    public componentDidUpdate(prevProps: AWTableProps){
+        if(prevProps.data != this.props.data){
+            this.setState({ page: 0 });
+        }
+    }
+
     public render() {
         let { page, rowsPerPage } = this.state;
         let { header, data } = this.props;
