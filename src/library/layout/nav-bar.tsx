@@ -70,7 +70,6 @@ let style = {
     navBarLink: {
         color: 'inherit',
         'text-decoration': 'none',
-        'text-indent': '20px'
     }
 };
 
